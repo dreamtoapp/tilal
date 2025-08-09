@@ -1,0 +1,9 @@
+# Helpers Directory
+
+This directory will contain helper functions and utilities specific to the tracking management feature.
+
+## Future additions:
+- Tracking calculations
+- Location utilities
+- Time formatting helpers
+- Distance calculations 

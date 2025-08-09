@@ -1,0 +1,72 @@
+---
+description: Enforce focused task-only changes and prevent unintended side effects
+globs:
+  - app/**/*.tsx
+  - app/**/*.ts
+  - app/**/*.jsx
+  - app/**/*.js
+alwaysApply: true
+---
+
+# 🚨 FOCUSED TASK RULES - MANDATORY COMPLIANCE
+
+## PRIMARY RULE: FOCUS ON TASK ONLY
+- Make ONLY the requested changes
+- Preserve existing functionality exactly
+- Never modify unrelated code sections
+- Never change styling of other components
+- Never touch code outside the specific task
+
+## FORBIDDEN BEHAVIORS
+- ❌ Modify unrelated code sections
+- ❌ Change styling of other components  
+- ❌ Touch code outside specific task
+- ❌ Make "improvements" not requested
+- ❌ Refactor existing working code
+- ❌ Assume user wants cleanup
+- ❌ Add features not requested
+
+## REQUIRED PROTOCOL
+Before Changes:
+- Identify exactly what needs to change
+- Locate only specific code section
+- Plan minimal change required
+- Verify no other code affected
+
+During Changes:
+- Make only requested modification
+- Preserve all existing styling
+- Preserve all existing functionality
+- Don't improve or cleanup other code
+
+After Changes:
+- Verify specific task works
+- Confirm other components unchanged
+- Test existing functionality preserved
+- Report only what was changed
+
+## VERIFICATION CHECKLIST
+- [ ] Only requested feature modified
+- [ ] No unrelated code touched
+- [ ] Existing styling preserved
+- [ ] Other components work as before
+- [ ] No unintended side effects
+
+## EMERGENCY STOP
+If about to:
+- Modify unrelated code
+- Change existing styling
+- Touch working functionality
+- Make unrequested improvements
+
+Then:
+- STOP immediately
+- Ask for clarification
+- Confirm exact scope
+- Make only requested change
+
+## EXAMPLES
+✅ CORRECT: "Make cancel reason full width" → Only modify cancel reason container
+❌ WRONG: "Make cancel reason full width" → Modify cancel reason AND change driver styling
+
+**This rule is MANDATORY. No exceptions. No side effects. Only requested task.**

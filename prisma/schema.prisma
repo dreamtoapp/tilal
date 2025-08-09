@@ -1,0 +1,809 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  DRIVER
+  MARKETER
+}
+
+enum VehicleType {
+  MOTORCYCLE // دراجة نارية
+  CAR // سيارة
+  VAN // فان
+  TRUCK // شاحنة صغيرة
+  BICYCLE // دراجة هوائية
+}
+
+model Supplier {
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
+  name         String                @default("")
+  slug         String                @default("")
+  logo         String?
+  email        String                @default("")
+  phone        String                @default("")
+  address      String                @default("")
+  type         String                @default("company")
+  products     Product[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  translations SupplierTranslation[]
+}
+
+model SupplierTranslation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  supplierId   String   @db.ObjectId
+  supplier     Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  languageCode String // e.g., "en", "ar-SA"
+  name         String
+  address      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([supplierId, languageCode])
+}
+
+model Product {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String   @default("")
+  description    String   @default("")
+  slug           String   @unique @default("")
+  price          Float    @default(0)
+  compareAtPrice Float? // Optional: Price before sale
+  costPrice      Float? // Optional: Cost of the product to the business
+  size           String?
+  details        String?
+  imageUrl       String? // Main image (keeping for backward compatibility)
+  images         String[] // Array of image URLs for multiple product images
+  supplierId     String   @db.ObjectId
+  type           String   @default("product")
+  supplier       Supplier @relation(fields: [supplierId], references: [id])
+
+  productCode String? // Product code/SKU
+  gtin        String? // Optional: Global Trade Item Number (UPC, EAN, etc.)
+  material    String? // Material information
+  brand       String? // Brand name
+  color       String? // Color information
+  dimensions  String? // Product dimensions
+  weight      String? // Product weight
+  features    String[] // Product features as array
+
+  // Shipping and return information
+  requiresShipping Boolean @default(true) //  product require shipping?
+  shippingDays     String? @default("3-5") // Default shipping days
+
+  returnPeriodDays    Int?    @default(14) // Default return period in days
+  hasQualityGuarantee Boolean @default(true) // product has quality guarantee
+  careInstructions    String? // Care instructions
+
+  published       Boolean @default(false)
+  outOfStock      Boolean @default(false)
+  manageInventory Boolean @default(true) // to track stock for this product
+  stockQuantity   Int? // Current stock level (if manageInventory is true)
+
+  // Rating and review fields
+  rating       Float? // Average rating (1-5 stars)
+  reviewCount  Int      @default(0) // Number of reviews
+  reviews      Review[] // Relation to reviews
+  previewCount Int      @default(0) // Number of times the product page was viewed
+
+  // Wishlist relation
+  wishlistedBy WishlistItem[] // Users who have wishlisted this product
+
+  cartItems           CartItem[] // A product can be in many cart items
+  orderItems          OrderItem[] // A product can belong to multiple order items
+  // categories Category[]  // Old implicit relation removed
+  categoryAssignments CategoryProduct[] // Explicit relation via join table
+
+  // Offer relationships via join table
+  offerAssignments OfferProduct[] // Explicit relation via join table
+
+  // Organization & SEO
+  tags         String[]             @default([]) // tags for filtering and organization
+  translations ProductTranslation[] // Relation to product translations
+  categorySlug String? // Denormalized main category slug for fast filtering
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // MongoDB/Prisma cannot index relation fields like categoryAssignments. For best performance on category filtering, consider denormalizing categorySlug onto Product as a scalar field and indexing it.
+
+  @@index([categorySlug])
+  // Performance indexes for infinite scroll and filtering
+  @@index([published, createdAt]) // For homepage/category infinite scroll
+  @@index([published, outOfStock, createdAt])
+  @@index([supplierId, published, outOfStock])
+  @@index([imageUrl])
+  @@index([rating])
+  @@index([price])
+}
+
+// Model for Product Translations
+model ProductTranslation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String   @db.ObjectId
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  languageCode String // e.g., "en", "ar-SA"
+  name         String // Translated product name
+  details      String? // Translated product details
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([productId, languageCode]) // Ensure one translation per language for each product
+}
+
+model User {
+  id                  String             @id @default(auto()) @map("_id") @db.ObjectId
+  phone               String?            @unique
+  name                String? // moved from Driver
+  email               String? // moved from Driver
+  emailVerified       DateTime?          @map("email_verified")
+  password            String? // moved from Driver
+  image               String? // moved from Driver (was imageUrl)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  accounts            Account[]
+  role                UserRole           @default(CUSTOMER) // Use enum for roles
+  isOtp               Boolean            @default(false)
+  isOauth             Boolean            @default(false)
+  otpCode             String?            @default("1234")
+  reviews             Review[] // User's product reviews
+  wishlist            WishlistItem[] // User's wishlist items
+  cart                Cart? // User's cart
+  UserNotification    UserNotification[]
+  errorLogs           ErrorLog[]
+  pushSubscriptions   PushSubscription[] // Change to one-to-many
+  // Driver-specific fields
+  vehicleType         VehicleType? // Type of vehicle for drivers
+  vehiclePlateNumber  String? // Vehicle plate number
+  vehicleColor        String? // Vehicle color
+  vehicleModel        String? // Vehicle model (e.g., "Honda CBR", "Toyota Camry")
+  driverLicenseNumber String? // Driver's license number
+  isActive            Boolean            @default(true) // For driver availability management
+  maxOrders           Int?               @default(3) // Maximum orders driver can handle simultaneously
+  experience          Int? // Years of driving experience
+
+  // Relations for orders as customer and as driver
+  customerOrders Order[]       @relation("OrderCustomer")
+  driverOrders   Order[]       @relation("OrderDriver")
+  activeTrips    ActiveTrip[]  @relation("ActiveTripDriver")
+  addresses      Address[]
+  orderRatings   OrderRating[] // Ratings submitted by this user
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+enum OrderStatus {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  DELIVERED
+  CANCELED
+}
+
+model Order {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber   String      @unique
+  customerId    String      @db.ObjectId // Reference to the user 
+  customer      User        @relation("OrderCustomer", fields: [customerId], references: [id]) // Relation to the User model
+  driverId      String?     @db.ObjectId // Reference to User (was Driver)
+  driver        User?       @relation("OrderDriver", fields: [driverId], references: [id]) // Updated to User, explicit relation name
+  addressId     String      @db.ObjectId
+  address       Address     @relation("AddressOrders", fields: [addressId], references: [id])
+  status        OrderStatus @default(PENDING)
+  amount        Float       @default(0)
+  resonOfcancel String?     @default("")
+  paymentMethod String?     @default("CASH") // Default payment method
+  deliveredAt   DateTime? // Date when the order was delivered
+
+  items      OrderItem[]
+  activeTrip ActiveTrip? // علاقة واحد لواحد (طلبية واحدة ← تتبع واحد)
+  shiftId    String      @db.ObjectId // Ensure this matches Shift.id's native type
+  shift      Shift       @relation(fields: [shiftId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  // --- Added fields ---
+  deliveryInstructions String? // تعليمات التوصيل
+  ratings              OrderRating[] // Ratings for this order
+}
+
+model OrderItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId // Explicitly define as ObjectId
+  orderId   String   @db.ObjectId // Ensure this matches the type of Order.id
+  productId String   @db.ObjectId
+  quantity  Int      @default(0)
+  price     Float    @default(0)
+  order     Order?   @relation(fields: [orderId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id]) // Link to Product
+}
+
+model ActiveTrip {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String   @unique @db.ObjectId // أضفنا @unique هنا
+  order       Order    @relation(fields: [orderId], references: [id])
+  driverId    String   @db.ObjectId // Reference to User (was Driver)
+  driver      User     @relation("ActiveTripDriver", fields: [driverId], references: [id]) // Updated to User, explicit relation name
+  orderNumber String?
+  latitude    String?
+  longitude   String?
+  updateCount Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([orderId, driverId])
+}
+
+model LocationHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  driverId  String // Should reference User.id
+  orderId   String?
+  latitude  String? // Latitude of the location
+  longitude String? // Longitude of the location
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Counter {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  key     String @unique // A unique key to identify the counter (e.g., "order_counter")
+  counter Int    @default(0)
+}
+
+model Shift {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  name      String   @default("")
+  startTime String   @default("")
+  endTime   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  orders Order[] // An order belongs to a specific shift
+}
+
+model Company {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  fullName       String @default("") // Full name of the company owner/contact person
+  email          String @default("") // Email address
+  phoneNumber    String @default("") // Phone number
+  whatsappNumber String @default("") // WhatsApp number
+  logo           String @default("") // Profile picture URL
+  profilePicture String @default("") // Profile picture URL
+  bio            String @default("") // Bio/description
+
+  twitter    String @default("") // Twitter URL
+  linkedin   String @default("") // LinkedIn URL
+  instagram  String @default("") // Instagram URL
+  tiktok     String @default("") // TikTok URL
+  facebook   String @default("") // Facebook URL
+  snapchat   String @default("") // Snapchat URL
+  website    String @default("") // Website URL
+  address    String @default("") // Address of the company
+  taxPercentage     Int    @default(15) // Tax fee
+  taxNumber  String @default("") // Tax number
+  taxQrImage String @default("") // URL of the tax QR image
+
+  workingHours String @default("")
+  minShipping  Int    @default(0)
+  shippingFee  Int    @default(0)
+
+  online Boolean @default(false)
+
+  latitude  String? // Latitude of the company location
+  longitude String? // Longitude of the company location
+  createdAt DateTime @default(now()) // Timestamp of creation
+  updatedAt DateTime @updatedAt // Timestamp of last update
+}
+
+model NewLetter {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ContactSubmission {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  replies   Reply[] // One-to-many relationship: one submission can have multiple replies
+}
+
+model Reply {
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  content             String // The reply message
+  sentAt              DateTime          @default(now()) // Timestamp for when the reply was sent
+  contactSubmissionId String            @db.ObjectId // Ensure this matches the native type of ContactSubmission.id
+  contactSubmission   ContactSubmission @relation(fields: [contactSubmissionId], references: [id])
+}
+
+model Changelog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  subject   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // Timestamp of last update
+}
+
+// Enhanced Term model for policy management
+model Term {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  title        String            @default("") // Policy title
+  type         TermType          @default(GENERIC) // Policy type
+  content      String            @default("") // Policy content
+  version      Int               @default(1) // Version number
+  isActive     Boolean           @default(true) // Active status
+  isPublished  Boolean           @default(false) // Published status
+  metadata     Json? // Additional metadata (compliance info, etc.)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  translations TermTranslation[] // Relation to term translations
+
+  @@index([type, isActive]) // Index for efficient queries
+  @@index([isPublished]) // Index for published policies
+  @@map("terms")
+}
+
+// Policy types enum
+enum TermType {
+  WEBSITE_POLICY // سياسة الموقع
+  RETURN_POLICY // سياسة الإرجاع
+  PRIVACY_POLICY // سياسة الخصوصية
+  SHIPPING_POLICY // سياسة الشحن
+  TERMS_OF_SERVICE // شروط الخدمة
+  GENERAL_TERMS // الشروط العامة
+  GENERIC // Generic terms (backward compatibility)
+}
+
+// Enhanced Term Translation model
+model TermTranslation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  termId       String   @db.ObjectId
+  term         Term     @relation(fields: [termId], references: [id], onDelete: Cascade)
+  languageCode String // e.g., "en", "ar-SA"
+  title        String   @default("") // Translated title
+  content      String // Translated term content
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([termId, languageCode])
+  @@index([languageCode]) // Index for language-based queries
+}
+
+model GlobalSEO {
+  id                   String     @id @default(auto()) @map("_id") @db.ObjectId
+  entityId             String
+  entityType           EntityType @default(PAGE)
+  locale               String // Add this line 👈
+  metaTitle            String
+  metaDescription      String
+  canonicalUrl         String?
+  robots               String     @default("index, follow")
+  openGraphTitle       String?
+  openGraphDescription String?
+  openGraphImage       String?
+  twitterCardType      String?
+  twitterImage         String?
+  schemaOrg            Json?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+
+  @@unique([entityId, entityType, locale]) // 👈 Update uniqueness to handle per-locale entries
+}
+
+enum EntityType {
+  PAGE // For general pages like homepage, about, contact
+  PRODUCT
+  CATEGORY
+
+  BLOG_POST
+  BLOG_CATEGORY
+}
+
+enum NotificationType {
+  WARNING
+  DESTRUCTIVE
+  INFO
+  SUCCESS
+  ORDER
+  PROMO
+  SYSTEM
+}
+
+model UserNotification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?          @db.ObjectId
+  user      User?            @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  type      NotificationType // <--- now uses enum!
+  read      Boolean          @default(false)
+  actionUrl String?
+  icon      String?
+  channel   String           @default("in-app")
+  createdAt DateTime         @default(now())
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  userId    String   @db.ObjectId
+  requestId String   @db.ObjectId
+}
+
+model Request {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectId
+  title       String // عنوان الطلب
+  description String // وصف الطلب
+  status      RequestStatus @default(PENDING)
+  type        RequestType // نوع الطلب
+  createdBy   String // اسم أو بريد العميل
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  attachment  String? // رابط مرفق (اختياري)
+}
+
+model CommentTechno {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  message   String
+  createdBy String
+  createdAt DateTime @default(now())
+  requestId String   @db.ObjectId
+  // Optionally: isAdmin Boolean
+}
+
+enum RequestStatus {
+  PENDING // قيد الانتظار
+  IN_PROGRESS // قيد التنفيذ
+  DONE // تم التنفيذ
+  REJECTED // مرفوض
+}
+
+enum RequestType {
+  BUG // مشكلة
+  FEATURE // طلب جديد
+  IMPROVEMENT // تعديل
+}
+
+model SupportPing {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  message   String
+  timestamp DateTime @default(now())
+}
+
+// Expense Model
+model Expense {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount    Float // قيمة المصروف
+  note      String? // وصف أو ملاحظة
+  category  String? // تصنيف المصروف (اختياري)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String? // المستخدم الذي أضاف المصروف
+}
+
+// Review Model for Product Ratings
+model Review {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  rating     Int // 1-5 stars
+  comment    String // Review text
+  productId  String   @db.ObjectId
+  userId     String   @db.ObjectId
+  isVerified Boolean  @default(false) // Whether the user has purchased the product
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+// Wishlist Model for User's Favorite Products
+model WishlistItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+// Category Model
+model Category {
+  id                 String                @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String                @unique
+  description        String? // Optional description
+  imageUrl           String? // Optional image URL for the category
+  productAssignments CategoryProduct[] // Explicit relation via join table
+  translations       CategoryTranslation[] // Relation to category translations
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+}
+
+model CategoryProduct {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId String   @db.ObjectId
+  productId  String   @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade) // If a category is deleted, remove assignments
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // If a product is deleted, remove assignments
+  assignedAt DateTime @default(now())
+
+  @@unique([categoryId, productId])
+}
+
+// Model for Category Translations
+model CategoryTranslation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId   String   @db.ObjectId
+  category     Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  languageCode String // e.g., "en", "ar-SA"
+  name         String // Translated category name
+  description  String? // Translated category description
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([categoryId, languageCode])
+}
+
+// Join table for Category and Product (Many-to-Many)
+
+model AnalyticsSettings {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Used to ensure only one global analytics settings record exists
+  singletonKey         String   @unique @default("global_analytics_settings")
+  googleAnalyticsId    String?
+  facebookPixelId      String?
+  tiktokPixelId        String?
+  snapchatPixelId      String?
+  pinterestTagId       String?
+  linkedinInsightTagId String?
+  updatedAt            DateTime @updatedAt
+}
+
+model WebVital {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String // Metric name: LCP, FCP, CLS, INP, TTFB
+  value      Float // Metric value
+  page       String // Page route or URL
+  userAgent  String // User agent string
+  timestamp  DateTime // When the metric was recorded
+  device     String? // Device type (mobile, desktop, etc.)
+  browser    String? // Browser name/version
+  city       String? // City from geolocation
+  country    String? // Country from geolocation
+  additional Json? // For future extensibility (e.g., connection, custom fields)
+}
+
+model Offer {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String  @unique
+  description        String?
+  bannerImage        String? // Optional - can be added later
+  isActive           Boolean @default(true)
+  displayOrder       Int     @default(0)
+  hasDiscount        Boolean @default(false)
+  discountPercentage Float? // Only if hasDiscount is true
+  header             String? // Custom header for frontend
+  subheader          String? // Custom subheader for frontend
+
+  // Product relationships via join table
+  productAssignments OfferProduct[] // Explicit relation via join table
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OfferProduct {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  offerId    String   @db.ObjectId
+  productId  String   @db.ObjectId
+  offer      Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade) // If an offer is deleted, remove assignments
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // If a product is deleted, remove assignments
+  assignedAt DateTime @default(now())
+
+  @@unique([offerId, productId])
+}
+
+// Cart models for the new server-side cart implementation
+model Cart {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?    @unique @db.ObjectId
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String   @db.ObjectId
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+}
+
+model Address {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId               String   @db.ObjectId
+  user                 User     @relation(fields: [userId], references: [id])
+  label                String   @default("المنزل") // e.g. المنزل، العمل
+  district             String
+  street               String
+  buildingNumber       String
+  floor                String?
+  apartmentNumber      String?
+  landmark             String?
+  deliveryInstructions String?
+  // 🗺️ CRITICAL: Coordinates for driver navigation
+  latitude             String?
+  longitude            String?
+  isDefault            Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  orders               Order[]  @relation("AddressOrders")
+}
+
+enum RatingType {
+  PURCHASE
+  DELIVERY
+  SUPPORT
+  APP
+  PRODUCT
+  OTHER
+}
+
+model OrderRating {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String     @db.ObjectId
+  userId    String     @db.ObjectId
+  rating    Int
+  comment   String?
+  type      RatingType
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([orderId, userId, type])
+}
+
+// --- About Page Content Models ---
+model AboutPageContent {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  brandId       String // For multi-brand support
+  heroTitle     String
+  heroSubtitle  String
+  heroImageUrl  String // URL for hero image
+  missionTitle  String
+  missionText   String
+  features      Feature[]     @relation("AboutPageFeatures")
+  testimonials  Testimonial[] @relation("AboutPageTestimonials")
+  ctaTitle      String
+  ctaText       String
+  ctaButtonText String
+  ctaButtonLink String
+  faq           FAQ[]         @relation("AboutPageFAQ")
+  contactLink   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Feature {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPageId String           @db.ObjectId
+  aboutPage   AboutPageContent @relation("AboutPageFeatures", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  icon        String // Icon name or type
+  title       String
+  description String
+  imageUrl    String // URL for feature image
+}
+
+model Testimonial {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPageId String           @db.ObjectId
+  aboutPage   AboutPageContent @relation("AboutPageTestimonials", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  author      String
+  text        String
+  rating      Int
+  imageUrl    String // URL for testimonial author image
+}
+
+model FAQ {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPageId String           @db.ObjectId
+  aboutPage   AboutPageContent @relation("AboutPageFAQ", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  question    String
+  answer      String
+}
+
+model ErrorLog {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  errorId    String        @unique // Human-readable error ID for users
+  message    String // Error message
+  stack      String? // Full error stack trace
+  digest     String? // Next.js error digest
+  url        String? // Page where error occurred
+  userAgent  String? // Browser/device info
+  userId     String?       @db.ObjectId // User who encountered error (if logged in)
+  user       User?         @relation(fields: [userId], references: [id])
+  severity   ErrorSeverity @default(MEDIUM)
+  status     ErrorStatus   @default(NEW)
+  resolved   Boolean       @default(false)
+  resolvedBy String?       @db.ObjectId
+  resolvedAt DateTime?
+  notes      String? // Admin notes for fixing
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+enum ErrorSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ErrorStatus {
+  NEW
+  INVESTIGATING
+  IN_PROGRESS
+  RESOLVED
+  IGNORED
+}
+
+model PushSubscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userName  String?
+  role      String? // Store the user's role (ADMIN, DRIVER, etc.)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // @@map("push_subscriptions")
+}

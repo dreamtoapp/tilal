@@ -1,0 +1,6 @@
+---
+# UI Colors Rule
+
+- Do not use hardcoded color values in the codebase.
+- Use theme tokens or variables for all colors.
+---

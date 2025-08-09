@@ -1,0 +1,17 @@
+---
+alwaysApply: true
+---
+
+# Folder Structure Rule
+
+- UI components go in `components/`
+- Server actions/business logic go in `actions/`
+- Utility functions/hooks go in `helpers/`
+- If any of these folders do not exist, create them and add a `README.md` explaining what goes inside.
+- If the folder exists, make sure each file is in the correct subfolder.
+- This keeps the project organized and easy to understand for everyone!
+
+Example structure:
+- [components/](mdc:components/README.md)
+- [actions/](mdc:app/(e-comm)/actions/README.md)
+- [helpers/](mdc:app/(e-comm)/helpers/README.md)

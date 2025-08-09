@@ -1,0 +1,7 @@
+---
+# Component Size Rule
+
+- Keep file count low
+- Each file should have a single specific job
+- Avoid having too many files
+---

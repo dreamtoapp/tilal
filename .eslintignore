@@ -1,0 +1,22 @@
+# Ignore node modules and build output
+dist/
+build/
+.next/
+node_modules/
+coverage/
+public/
+
+# Ignore config files
+*.config.js
+*.config.ts
+
+# Ignore log and cache files
+*.log
+.eslintcache
+
+# Ignore test coverage and misc
+coverage/
+
+# Ignore editor directories and files
+.vscode/
+.idea/

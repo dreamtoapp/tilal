@@ -1,0 +1,74 @@
+@media print {
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-family: 'Tajawal', Arial, sans-serif;
+    direction: rtl;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  .print\:bg-white {
+    background: #fff !important;
+  }
+  .print\:p-8 {
+    padding: 2rem !important;
+  }
+  .print\:rounded {
+    border-radius: 0 !important;
+  }
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+  .max-w-7xl,
+  .mx-auto,
+  .py-10,
+  .px-4,
+  .space-y-8 {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  nav,
+  aside,
+  .sidebar,
+  .filter-panel,
+  .chart-type-toggle,
+  .print-hide,
+  button,
+  input,
+  select,
+  .react-datepicker-wrapper {
+    display: none !important;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #222 !important;
+    font-weight: bold;
+  }
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: #fff !important;
+  }
+  th,
+  td {
+    border: 1px solid #bbb !important;
+    padding: 8px !important;
+    color: #222 !important;
+  }
+  .kpi-cards,
+  .kpi-card {
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+  /* Add logo and print time if desired */
+  @page {
+    margin: 1.5cm;
+  }
+}

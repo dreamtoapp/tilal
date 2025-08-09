@@ -1,0 +1,1044 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-cairo: 'Cairo', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+}
+
+@layer base {
+  :root {
+    /* الوضع النهاري */
+    --background: 0 0% 100%;
+    --background: 0 0% 92%; /* خلفية أغمق لتحسين التباين */
+    --foreground: 222.2 84% 10%; /* نص داكن للتباين الجيد */
+
+    /* البطاقات والنوافذ المنبثقة */
+    --card: 0 0% 100%; /* خلفية بيضاء للبطاقات */
+    --card-foreground: 222.2 84% 10%; /* نص داكن للبطاقات */
+    --popover: 0 0% 100%; /* خلفية بيضاء للنوافذ المنبثقة */
+    --popover-foreground: 222.2 84% 10%; /* نص داكن للنوافذ المنبثقة */
+
+    /* الألوان الأساسية */
+    --primary: 210 100% 32%; /* لون أساسي (أزرق داكن - محسّن للتباين) */
+    --primary-foreground: 0 0% 100%; /* نص أبيض على الأزرار الأساسية */
+
+    /* الألوان الثانوية */
+    --secondary: 220 14% 94%; /* لون ثانوي (رمادي فاتح) */
+    --secondary-foreground: 222.2 84% 10%; /* نص داكن على العناصر الثانوية */
+
+    /* العناصر الخافتة */
+    --muted: 220 14% 85%; /* لون خافت (رمادي أغمق قليلاً) */
+    --muted-foreground: 220 14% 45%; /* نص رمادي للعناصر الخافتة */
+
+    /* الألوان المميزة */
+    --accent: 210 80% 50%; /* لون مميز (أزرق) */
+    --accent-foreground: 0 0% 100%; /* نص أبيض على العناصر المميزة */
+
+    /* الألوان التدميرية */
+    --destructive: 0 84.2% 60.2%; /* لون تدميري (أحمر) */
+    --destructive-foreground: 0 0% 100%; /* نص أبيض على الأزرار التدميرية */
+
+    /* الحدود وحقول الإدخال */
+    --border: 220 90% 75%; /* لون الحدود (رمادي أغمق لتحسين التباين) */
+    --input: 220 30% 85%; /* لون حقول الإدخال (رمادي أغمق) */
+
+    /* حلقة التركيز */
+    --ring: 210 80% 50%; /* لون حلقة التركيز (أزرق) */
+
+    /* زوايا مدورة */
+    --radius: 0.5rem;
+
+    /* Semantic Status Colors for Cards - Light Mode */
+    --info-soft-background: 220 90% 93%;    /* Light Blue BG */
+    --info-foreground: 224 76% 48%;         /* Dark Blue Text */
+    --success-soft-background: 150 75% 90%; /* Light Green BG */
+    --success-foreground: 160 93% 24%;      /* Dark Green Text */
+    --warning-soft-background: 56 90% 88%;  /* Light Yellow BG */
+    --warning-foreground: 30 89% 37%;       /* Dark Yellow/Orange Text */
+    --neutral-soft-background: 270 100% 95%;/* Light Purple BG */
+    --neutral-foreground: 270 65% 40%;      /* Dark Purple Text */
+    --danger-soft-background: 0 90% 94%;    /* Light Red BG */
+    --danger-foreground: 0 72% 42%;         /* Dark Red Text */
+    --special-soft-background: 330 80% 95%; /* Light Pink BG */
+    --special-foreground: 330 77% 42%;      /* Dark Pink Text */
+
+    /* ألوان الرسوم البيانية */
+    --chart-1: 12 76% 61%; /* ألوان للرسوم البيانية */
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    /* Enhanced Feature Colors - Light Mode */
+    --feature-products: 142 76% 36%;        /* Rich Green for Products */
+    --feature-products-soft: 142 76% 95%;   /* Light Green BG */
+    --feature-users: 217 91% 59%;           /* Rich Blue for Users */
+    --feature-users-soft: 217 91% 95%;      /* Light Blue BG */
+    --feature-analytics: 259 94% 51%;       /* Rich Purple for Analytics */
+    --feature-analytics-soft: 259 94% 95%;  /* Light Purple BG */
+    --feature-settings: 25 95% 53%;         /* Rich Orange for Settings */
+    --feature-settings-soft: 25 95% 95%;    /* Light Orange BG */
+    --feature-suppliers: 188 95% 35%;       /* Rich Teal for Suppliers */
+    --feature-suppliers-soft: 188 95% 95%;  /* Light Teal BG */
+    --feature-commerce: 231 48% 48%;        /* Rich Indigo for Commerce */
+    --feature-commerce-soft: 231 48% 95%;   /* Light Indigo BG */
+
+    /* Order Status Colors - Light Mode */
+    --status-pending: 45 95% 40%;           /* Strong Amber for Pending */
+    --status-pending-soft: 45 100% 92%;    /* Light Amber BG */
+    --status-urgent: 0 85% 45%;             /* Strong Red for Urgent */
+    --status-urgent-soft: 0 100% 94%;      /* Light Red BG */
+    --status-high-value: 160 85% 35%;      /* Strong Emerald for High Value */
+    --status-high-value-soft: 160 100% 92%; /* Light Emerald BG */
+    --status-priority: 217 90% 45%;        /* Strong Blue for Priority */
+    --status-priority-soft: 217 100% 93%;  /* Light Blue BG */
+  }
+
+  .dark {
+    /* الوضع الليلي */
+    --background: 222.2 84% 4%; /* خلفية داكنة جدًا */
+    --foreground: 210 40% 98%; /* نص فاتح للتباين الجيد */
+
+    /* البطاقات والنوافذ المنبثقة */
+    --card: 222.2 84% 8%; /* خلفية داكنة للبطاقات (أفتح قليلاً من الخلفية) */
+    --card-foreground: 210 40% 98%; /* نص فاتح للبطاقات */
+    --popover: 222.2 84% 8%; /* خلفية داكنة للنوافذ المنبثقة */
+    --popover-foreground: 210 40% 98%; /* نص فاتح للنوافذ المنبثقة */
+
+    /* الألوان الأساسية */
+    --primary: 210 100% 32%; /* لون أساسي (أزرق داكن - محسّن للتباين) */
+    --primary-foreground: 0 0% 100%; /* نص أبيض على الأزرار الأساسية */
+
+    /* الألوان الثانوية */
+    --secondary: 217.2 32.6% 15%; /* لون ثانوي (رمادي داكن) */
+    --secondary-foreground: 210 40% 98%; /* نص فاتح على العناصر الثانوية */
+
+    /* العناصر الخافتة */
+    --muted: 217.2 32.6% 15%; /* لون خافت (رمادي داكن) */
+    --muted-foreground: 215 20.2% 80%; /* lighter gray for better contrast in dark mode */
+
+    /* الألوان المميزة */
+    --accent: 210 80% 50%; /* لون مميز (أزرق) */
+    --accent-foreground: 0 0% 100%; /* نص أبيض على العناصر المميزة */
+
+    /* الألوان التدميرية */
+    --destructive: 0 62.8% 40%; /* لون تدميري (أحمر داكن) */
+    --destructive-foreground: 0 0% 100%; /* نص أبيض على الأزرار التدميرية */
+
+    /* الحدود وحقول الإدخال */
+    --border: 217.2 32.6% 25%; /* لون الحدود (رمادي داكن - تم تعديله ليكون أفتح) */
+    --input: 217.2 32.6% 20%; /* لون حقول الإدخال (رمادي داكن) */
+
+    /* حلقة التركيز */
+    --ring: 210 80% 50%; /* لون حلقة التركيز (أزرق) */
+
+    /* Semantic Status Colors for Cards - Dark Mode */
+    --info-soft-background: 220 50% 15%;    /* Dark Blue BG */
+    --info-foreground: 220 80% 85%;         /* Light Blue Text */
+    --success-soft-background: 150 50% 15%; /* Dark Green BG */
+    --success-foreground: 150 70% 75%;      /* Light Green Text */
+    --warning-soft-background: 45 50% 18%;  /* Dark Yellow BG */
+    --warning-foreground: 45 80% 75%;       /* Light Yellow Text */
+    --neutral-soft-background: 270 40% 15%; /* Dark Purple BG */
+    --neutral-foreground: 270 70% 80%;      /* Light Purple Text */
+    --danger-soft-background: 0 50% 18%;    /* Dark Red BG */
+    --danger-foreground: 0 80% 80%;         /* Light Red Text */
+    --special-soft-background: 330 40% 18%; /* Dark Pink BG */
+    --special-foreground: 330 70% 80%;      /* Light Pink Text */
+
+    /* ألوان الرسوم البيانية */
+    --chart-1: 220 70% 50%; /* أزرق */
+    --chart-2: 160 60% 45%; /* أخضر مزرق */
+    --chart-3: 30 80% 55%; /* برتقالي */
+    --chart-4: 280 65% 60%; /* بنفسجي */
+    --chart-5: 340 75% 55%; /* وردي */
+
+    /* Enhanced Feature Colors - Dark Mode */
+    --feature-products: 142 69% 58%;        /* Lighter Green for Products */
+    --feature-products-soft: 142 50% 10%;   /* Dark Green BG */
+    --feature-users: 217 80% 70%;           /* Lighter Blue for Users */
+    --feature-users-soft: 217 50% 12%;      /* Dark Blue BG */
+    --feature-analytics: 259 85% 70%;       /* Lighter Purple for Analytics */
+    --feature-analytics-soft: 259 50% 12%;  /* Dark Purple BG */
+    --feature-settings: 25 85% 65%;         /* Lighter Orange for Settings */
+    --feature-settings-soft: 25 50% 12%;    /* Dark Orange BG */
+    --feature-suppliers: 188 85% 55%;       /* Lighter Teal for Suppliers */
+    --feature-suppliers-soft: 188 50% 12%;  /* Dark Teal BG */
+    --feature-commerce: 231 60% 65%;        /* Lighter Indigo for Commerce */
+    --feature-commerce-soft: 231 40% 12%;   /* Dark Indigo BG */
+
+    /* Order Status Colors - Dark Mode */
+    --status-pending: 45 95% 70%;           /* Bright Amber for Pending */
+    --status-pending-soft: 45 60% 15%;     /* Strong Dark Amber BG */
+    --status-urgent: 0 85% 75%;             /* Bright Red for Urgent */
+    --status-urgent-soft: 0 60% 18%;       /* Strong Dark Red BG */
+    --status-high-value: 160 80% 65%;      /* Bright Emerald for High Value */
+    --status-high-value-soft: 160 60% 15%; /* Strong Dark Emerald BG */
+    --status-priority: 217 85% 80%;        /* Bright Blue for Priority */
+    --status-priority-soft: 217 60% 15%;   /* Strong Dark Blue BG */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+  html {
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--tw-prose-invert) var(--tw-bg-muted);
+  }
+}
+
+@layer components {
+  /* Feature-specific Border and Icon Colors */
+  .border-feature-products { border-color: hsl(var(--feature-products)); }
+  .border-l-feature-products { border-left-color: hsl(var(--feature-products)); }
+  .text-feature-products { color: hsl(var(--feature-products)); }
+  .bg-feature-products { background-color: hsl(var(--feature-products)); }
+  .bg-feature-products-soft { background-color: hsl(var(--feature-products-soft)); }
+  
+  .border-feature-users { border-color: hsl(var(--feature-users)); }
+  .border-l-feature-users { border-left-color: hsl(var(--feature-users)); }
+  .text-feature-users { color: hsl(var(--feature-users)); }
+  .bg-feature-users { background-color: hsl(var(--feature-users)); }
+  .bg-feature-users-soft { background-color: hsl(var(--feature-users-soft)); }
+  
+  .border-feature-analytics { border-color: hsl(var(--feature-analytics)); }
+  .border-l-feature-analytics { border-left-color: hsl(var(--feature-analytics)); }
+  .text-feature-analytics { color: hsl(var(--feature-analytics)); }
+  .bg-feature-analytics { background-color: hsl(var(--feature-analytics)); }
+  .bg-feature-analytics-soft { background-color: hsl(var(--feature-analytics-soft)); }
+  
+  .border-feature-settings { border-color: hsl(var(--feature-settings)); }
+  .border-l-feature-settings { border-left-color: hsl(var(--feature-settings)); }
+  .text-feature-settings { color: hsl(var(--feature-settings)); }
+  .bg-feature-settings { background-color: hsl(var(--feature-settings)); }
+  .bg-feature-settings-soft { background-color: hsl(var(--feature-settings-soft)); }
+  
+  .border-feature-suppliers { border-color: hsl(var(--feature-suppliers)); }
+  .border-l-feature-suppliers { border-left-color: hsl(var(--feature-suppliers)); }
+  .text-feature-suppliers { color: hsl(var(--feature-suppliers)); }
+  .bg-feature-suppliers { background-color: hsl(var(--feature-suppliers)); }
+  .bg-feature-suppliers-soft { background-color: hsl(var(--feature-suppliers-soft)); }
+  
+  .border-feature-commerce { border-color: hsl(var(--feature-commerce)); }
+  .border-l-feature-commerce { border-left-color: hsl(var(--feature-commerce)); }
+  .text-feature-commerce { color: hsl(var(--feature-commerce)); }
+  .bg-feature-commerce { background-color: hsl(var(--feature-commerce)); }
+  .bg-feature-commerce-soft { background-color: hsl(var(--feature-commerce-soft)); }
+
+  /* Destructive Border Colors */
+  .border-l-destructive { border-left-color: hsl(var(--destructive)); }
+
+  /* Functional Button Colors - Project-wide Standards */
+  
+  /* Add/Create Buttons - Success Green */
+  .btn-add {
+    @apply bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  .btn-add-outline {
+    @apply border border-green-600 text-green-600 bg-transparent hover:bg-green-600 hover:text-white transition-colors duration-200;
+  }
+  
+  /* Edit/Update Buttons - Warning Orange */
+  .btn-edit {
+    @apply bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  .btn-edit-outline {
+    @apply border border-orange-600 text-orange-600 bg-transparent hover:bg-orange-600 hover:text-white transition-colors duration-200;
+  }
+  
+  /* Delete/Remove Buttons - Destructive Red */
+  .btn-delete {
+    @apply bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  .btn-delete-outline {
+    @apply border border-red-600 text-red-600 bg-transparent hover:bg-red-600 hover:text-white transition-colors duration-200;
+  }
+  
+  /* Cancel/Close Buttons - Muted Gray */
+  .btn-cancel {
+    @apply bg-gray-600 text-white hover:bg-gray-700 border-gray-600 transition-colors duration-200;
+  }
+  .btn-cancel-outline {
+    @apply border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold transition-all duration-200;
+  }
+  
+  /* Save/Submit Buttons - Primary Blue */
+  .btn-save {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  .btn-save-outline {
+    @apply border border-blue-600 text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white transition-colors duration-200;
+  }
+  
+  /* View/Details Buttons - Analytics Purple */
+  .btn-view {
+    @apply bg-purple-600 text-white hover:bg-purple-700 border-purple-600 transition-colors duration-200;
+  }
+  .btn-view-outline {
+    @apply border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 font-semibold transition-all duration-200;
+  }
+  
+  /* Export/Download Buttons - Commerce Indigo */
+  .btn-export {
+    @apply bg-indigo-600 text-white hover:bg-indigo-700 border-indigo-600 transition-colors duration-200;
+  }
+  .btn-export-outline {
+    @apply border border-indigo-600 text-indigo-600 bg-transparent hover:bg-indigo-600 hover:text-white transition-colors duration-200;
+  }
+  
+  /* Approve/Confirm Buttons - Suppliers Teal */
+  .btn-approve {
+    @apply bg-teal-600 text-white hover:bg-teal-700 border-teal-600 transition-colors duration-200;
+  }
+  .btn-approve-outline {
+    @apply border border-teal-600 text-teal-600 bg-transparent hover:bg-teal-600 hover:text-white transition-colors duration-200;
+  }
+
+  /* Enhanced Card Animations */
+  .card-hover-effect {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .card-hover-effect:hover {
+    @apply shadow-lg border-opacity-80;
+  }
+
+  /* Professional Button Styles - Reduced scaling effect */
+  .btn-professional {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold transition-colors duration-300;
+    box-shadow: none;
+    position: relative;
+  }
+  
+  /* Remove shine effect */
+  .btn-professional::before {
+    display: none !important;
+  }
+
+  .btn-professional:hover, .btn-professional:focus-visible {
+    @apply from-blue-600 to-indigo-600;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .btn-professional:active {
+    @apply from-blue-700 to-indigo-700;
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* Icon Enhancement */
+  .icon-enhanced {
+    @apply transition-all duration-150 ease-in-out;
+  }
+  
+  .icon-enhanced:hover {
+    @apply scale-105;
+  }
+
+  /* Enhanced Card Border Glow */
+  .card-border-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-border-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(45deg, hsl(var(--feature-commerce)), hsl(var(--feature-commerce-soft)));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  /* Order Status Colors */
+  .border-status-pending { border-color: hsl(var(--status-pending)); }
+  .border-l-status-pending { border-left-color: hsl(var(--status-pending)); }
+  .text-status-pending { color: hsl(var(--status-pending)); }
+  .bg-status-pending { background-color: hsl(var(--status-pending)); }
+  .bg-status-pending-soft { background-color: hsl(var(--status-pending-soft)); }
+  
+  .border-status-urgent { border-color: hsl(var(--status-urgent)); }
+  .border-l-status-urgent { border-left-color: hsl(var(--status-urgent)); }
+  .text-status-urgent { color: hsl(var(--status-urgent)); }
+  .bg-status-urgent { background-color: hsl(var(--status-urgent)); }
+  .bg-status-urgent-soft { background-color: hsl(var(--status-urgent-soft)); }
+  
+  .border-status-high-value { border-color: hsl(var(--status-high-value)); }
+  .border-l-status-high-value { border-left-color: hsl(var(--status-high-value)); }
+  .text-status-high-value { color: hsl(var(--status-high-value)); }
+  .bg-status-high-value { background-color: hsl(var(--status-high-value)); }
+  .bg-status-high-value-soft { background-color: hsl(var(--status-high-value-soft)); }
+  
+  .border-status-priority { border-color: hsl(var(--status-priority)); }
+  .border-l-status-priority { border-left-color: hsl(var(--status-priority)); }
+  .text-status-priority { color: hsl(var(--status-priority)); }
+  .bg-status-priority { background-color: hsl(var(--status-priority)); }
+  .bg-status-priority-soft { background-color: hsl(var(--status-priority-soft)); }
+
+  /* Additional Status Colors */
+  .border-status-delivered { border-color: hsl(var(--status-high-value)); }
+  .border-l-status-delivered { border-left-color: hsl(var(--status-high-value)); }
+  .text-status-delivered { color: hsl(var(--status-high-value)); }
+  .bg-status-delivered { background-color: hsl(var(--status-high-value)); }
+  .bg-status-delivered-soft { background-color: hsl(var(--status-high-value-soft)); }
+
+  .border-status-canceled { border-color: hsl(var(--status-urgent)); }
+  .border-l-status-canceled { border-left-color: hsl(var(--status-urgent)); }
+  .text-status-canceled { color: hsl(var(--status-urgent)); }
+  .bg-status-canceled { background-color: hsl(var(--status-urgent)); }
+  .bg-status-canceled-soft { background-color: hsl(var(--status-urgent-soft)); }
+
+  /* Enhanced Text Contrast */
+  .text-strong { color: hsl(var(--foreground)); font-weight: 600; }
+  .text-strong-muted { color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .border-strong { border-color: hsl(var(--border)); border-width: 2px; }
+  .shadow-strong { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+
+  /* Semantic Color Utilities */
+  .border-l-destructive { border-left-color: hsl(var(--destructive)); }
+}
+
+.relative.w-full.h-0 {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* Adjust aspect ratio as needed */
+}
+
+.absolute.inset-0.w-full.h-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .relative.w-full.h-0 {
+    padding-bottom: 100%; /* Adjust aspect ratio for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .absolute.inset-0.w-full.h-full {
+    padding: 10px; /* Add padding for better spacing */
+  }
+}
+
+/* React-Multi-Carousel Custom Styles */
+/* Carousel container */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Carousel item */
+.carousel-item {
+  padding: 0;
+  height: 100%;
+}
+
+/* Custom dot styles */
+.custom-dot-list-style {
+  position: absolute;
+  bottom: 10px;
+  display: flex !important;
+  justify-content: center;
+  width: 100%;
+  z-index: 20;
+}
+
+.custom-dot-list-style li {
+  margin: 0 4px;
+}
+
+.custom-dot-list-style button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-dot-list-style .react-multi-carousel-dot--active button {
+  background: white;
+  width: 10px;
+  height: 10px;
+}
+
+/* Fix for carousel arrows */
+.react-multi-carousel-list .react-multiple-carousel__arrow {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 50% !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  z-index: 20 !important;
+}
+
+.react-multi-carousel-list .react-multiple-carousel__arrow:hover {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.react-multi-carousel-list .react-multiple-carousel__arrow--left {
+  left: 10px !important;
+}
+
+.react-multi-carousel-list .react-multiple-carousel__arrow--right {
+  right: 10px !important;
+}
+
+/* Simple Carousel Styles */
+.react-multi-carousel-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.carousel-item-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+}
+
+.custom-dot-list-style {
+  position: absolute;
+  bottom: 10px;
+  display: flex !important;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+  z-index: 1;
+}
+
+.custom-dot-list-style li {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.custom-dot-list-style button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-dot-list-style .react-multi-carousel-dot--active button {
+  background: white;
+  width: 10px;
+  height: 10px;
+}
+
+/* Animation Classes */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Enhanced Scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Enhanced Focus States */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+}
+
+/* Enhanced Grid Animations - Reduced for smoothness */
+.grid-item {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.grid-item:hover {
+  @apply shadow-lg z-10;
+}
+
+/* Background Patterns */
+.bg-pattern-dots {
+  background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-pattern-grid {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Mobile-Specific Enhancements */
+@media (max-width: 768px) {
+  .card-hover-effect:hover {
+    @apply shadow-md;
+  }
+  
+  .grid-item:hover {
+    @apply transform-none shadow-md;
+  }
+}
+
+/* Enhanced Mobile Touch Interactions */
+@media (hover: none) and (pointer: coarse) {
+  .btn-professional:active,
+  .btn-add:active,
+  .btn-edit:active,
+  .btn-delete:active,
+  .btn-save:active {
+    @apply scale-95;
+  }
+}
+
+/* Smooth transitions for interactive elements - removed global selector to prevent scroll issues */
+
+/* CSS Containment utilities to prevent layout interference */
+.isolate {
+  isolation: isolate;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* Enhanced loading states */
+.loading-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Enhanced stagger animations for lists */
+.stagger-item {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 50ms; }
+.stagger-item:nth-child(3) { animation-delay: 100ms; }
+.stagger-item:nth-child(4) { animation-delay: 150ms; }
+.stagger-item:nth-child(5) { animation-delay: 200ms; }
+.stagger-item:nth-child(6) { animation-delay: 250ms; }
+
+/* Enhanced UI Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width, 100%);
+  }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-progress-fill {
+  animation: progressFill 1.5s ease-out forwards;
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite;
+}
+
+/* Enhanced hover effects for user menu */
+.user-menu-item {
+  @apply transition-all duration-300 ease-out;
+}
+
+.user-menu-item:hover {
+  @apply transform -translate-y-0.5 shadow-md;
+}
+
+/* Glass morphism effect */
+.glass-effect {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced stats card animations */
+.stats-card {
+  @apply transition-all duration-500 ease-out;
+}
+
+.stats-card:hover {
+  @apply transform scale-105 shadow-lg;
+}
+
+/* Search suggestions animation */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-suggestion {
+  animation: slideInFromTop 0.3s ease-out forwards;
+}
+
+/* Enhanced infinite slide animation for testimonials */
+@keyframes slide-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide-infinite {
+  animation: slide-infinite 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-slide-infinite:hover {
+  animation-play-state: paused;
+}
+
+/* Ensure testimonials container doesn't overflow */
+.testimonials-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Individual testimonial card sizing */
+.testimonial-card {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+/* === Background Pattern Animations (for components/ui/Background.tsx) === */
+@keyframes grid-fade {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.3; }
+}
+.animate-grid-fade { animation: grid-fade 8s ease-in-out infinite; }
+
+@keyframes dots-move {
+  0%, 100% { background-position: 0 0, 0 0; }
+  50% { background-position: 20px 10px, 10px 20px; }
+}
+.animate-dots-move { animation: dots-move 10s linear infinite; }
+
+@keyframes lines-slide {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: 40px 40px; }
+}
+.animate-lines-slide { animation: lines-slide 12s linear infinite; }
+
+@keyframes vignette-fade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+.animate-vignette-fade { animation: vignette-fade 9s ease-in-out infinite; }
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+.animate-blob-float::before { animation: blob-float 12s ease-in-out infinite; }
+.animate-blob-float::after { animation: blob-float 14s ease-in-out infinite reverse; }
+
+/* === Sparks/Lines Pattern Animations (for components/ui/Background.tsx) === */
+@keyframes spark-line-1 { 0%,100%{transform:translateX(0);} 50%{transform:translateX(40px);} }
+@keyframes spark-line-2 { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-30px);} }
+@keyframes spark-line-3 { 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
+.animate-spark-line-1 { animation: spark-line-1 7s ease-in-out infinite; }
+.animate-spark-line-2 { animation: spark-line-2 9s ease-in-out infinite; }
+.animate-spark-line-3 { animation: spark-line-3 8s ease-in-out infinite; }
+
+@keyframes spark-dot-1 { 0%,100%{opacity:0.7;transform:translateY(0);} 50%{opacity:1;transform:translateY(-18px);} }
+@keyframes spark-dot-2 { 0%,100%{opacity:0.5;transform:scale(1);} 50%{opacity:1;transform:scale(1.3);} }
+@keyframes spark-dot-3 { 0%,100%{opacity:0.6;transform:translateX(0);} 50%{opacity:1;transform:translateX(22px);} }
+.animate-spark-dot-1 { animation: spark-dot-1 6s ease-in-out infinite; }
+.animate-spark-dot-2 { animation: spark-dot-2 8s ease-in-out infinite; }
+.animate-spark-dot-3 { animation: spark-dot-3 7s ease-in-out infinite; }
+
+/* === Wavy Chaos Pattern Animations === */
+@keyframes wavyChaos-A { 0%,100%{transform:translateX(0);} 50%{transform:translateX(40px);} }
+@keyframes wavyChaos-B { 0%,100%{transform:translateX(0);} 50%{transform:translateX(-30px);} }
+@keyframes wavyChaos-C { 0%,100%{transform:translateX(0);} 50%{transform:translateX(20px);} }
+.animate-wavyChaos-A { animation: wavyChaos-A 8s ease-in-out infinite; }
+.animate-wavyChaos-B { animation: wavyChaos-B 10s ease-in-out infinite; }
+.animate-wavyChaos-C { animation: wavyChaos-C 12s ease-in-out infinite; }
+
+/* === Rotating Shapes Pattern Animations === */
+@keyframes rotatingShapes-A { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+@keyframes rotatingShapes-B { 0%{transform:rotate(0deg);} 100%{transform:rotate(-360deg);} }
+@keyframes rotatingShapes-C { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+.animate-rotatingShapes-A { animation: rotatingShapes-A 14s linear infinite; }
+.animate-rotatingShapes-B { animation: rotatingShapes-B 18s linear infinite; }
+.animate-rotatingShapes-C { animation: rotatingShapes-C 16s linear infinite; }
+
+/* === Isometric Motif Pattern Animations === */
+@keyframes isometricMotif-A { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+@keyframes isometricMotif-B { 0%,100%{transform:scale(1);} 50%{transform:scale(0.92);} }
+@keyframes isometricMotif-C { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
+.animate-isometricMotif-A { animation: isometricMotif-A 9s ease-in-out infinite; }
+.animate-isometricMotif-B { animation: isometricMotif-B 11s ease-in-out infinite; }
+.animate-isometricMotif-C { animation: isometricMotif-C 13s ease-in-out infinite; }
+
+/* Modern rounded scrollbar for all browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+
+/* Webkit browsers */
+::-webkit-scrollbar-thumb {
+  background: var(--tw-bg-muted, #334155);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  min-height: 40px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tw-bg-muted, #475569);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+/* Remove horizontal scrollbar margin */
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+/* For dark/light theme, you can set --tw-bg-muted in your Tailwind config or :root */
+
+/* Location Button Enhanced Animations */
+@keyframes location-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes location-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -5px, 0);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0);
+  }
+  90% {
+    transform: translate3d(0, -1px, 0);
+  }
+}
+
+@keyframes location-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+}
+
+/* Apply custom animations */
+.animate-location-pulse {
+  animation: location-pulse 2s infinite;
+}
+
+.animate-location-bounce {
+  animation: location-bounce 2s infinite;
+}
+
+.animate-location-glow {
+  animation: location-glow 2s ease-in-out infinite;
+}
+
+/* Enhanced button hover effects */
+.location-button-enhanced {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.location-button-enhanced:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+}
+
+.location-button-enhanced:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Ripple effect for location button */
+.location-button-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.location-button-enhanced:active::before {
+  width: 200px;
+  height: 200px;
+}

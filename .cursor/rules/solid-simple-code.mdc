@@ -1,0 +1,7 @@
+---
+title: State Management Rule
+---
+
+# State Management Rule
+
+- Prefer Zustand for state management over React Context to avoid extra renders.

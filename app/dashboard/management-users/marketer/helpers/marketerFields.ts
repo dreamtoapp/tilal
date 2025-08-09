@@ -1,0 +1,175 @@
+import { UseFormReturn } from 'react-hook-form';
+import { MarketerFormData } from './marketerSchema';
+
+export function getMarketerFields(
+  register: UseFormReturn<MarketerFormData>['register'],
+  errors: UseFormReturn<MarketerFormData>['formState']['errors']
+) {
+  return [
+    {
+      name: 'name',
+      type: 'text',
+      placeholder: 'اسم المسوق',
+      register: register('name'),
+      error: errors.name?.message,
+    },
+    {
+      name: 'email',
+      type: 'email',
+      placeholder: 'البريد الإلكتروني',
+      register: register('email'),
+      error: errors.email?.message,
+    },
+    {
+      name: 'phone',
+      type: 'tel',
+      placeholder: 'رقم الهاتف',
+      register: register('phone'),
+      error: errors.phone?.message,
+    },
+    {
+      name: 'addressLabel',
+      type: 'select',
+      placeholder: 'نوع العنوان',
+      register: register('addressLabel'),
+      error: errors.addressLabel?.message,
+      options: [
+        { value: 'المنزل', label: 'المنزل' },
+        { value: 'العمل', label: 'العمل' },
+        { value: 'أخرى', label: 'أخرى' },
+      ],
+    },
+    {
+      name: 'district',
+      type: 'text',
+      placeholder: 'الحي',
+      register: register('district'),
+      error: errors.district?.message,
+    },
+    {
+      name: 'street',
+      type: 'text',
+      placeholder: 'الشارع',
+      register: register('street'),
+      error: errors.street?.message,
+    },
+    {
+      name: 'buildingNumber',
+      type: 'text',
+      placeholder: 'رقم المبنى',
+      register: register('buildingNumber'),
+      error: errors.buildingNumber?.message,
+    },
+    {
+      name: 'floor',
+      type: 'text',
+      placeholder: 'الطابق (اختياري)',
+      register: register('floor'),
+      error: errors.floor?.message,
+    },
+    {
+      name: 'apartmentNumber',
+      type: 'text',
+      placeholder: 'رقم الشقة (اختياري)',
+      register: register('apartmentNumber'),
+      error: errors.apartmentNumber?.message,
+    },
+    {
+      name: 'landmark',
+      type: 'text',
+      placeholder: 'معلم قريب (اختياري)',
+      register: register('landmark'),
+      error: errors.landmark?.message,
+    },
+    {
+      name: 'deliveryInstructions',
+      type: 'textarea',
+      placeholder: 'تعليمات التوصيل (اختياري)',
+      register: register('deliveryInstructions'),
+      error: errors.deliveryInstructions?.message,
+      className: "col-span-2",
+    },
+    {
+      name: 'password',
+      type: 'password',
+      placeholder: 'كلمة المرور',
+      register: register('password'),
+      error: errors.password?.message,
+    },
+    {
+      name: 'sharedLocationLink',
+      type: 'url',
+      placeholder: 'رابط الموقع المشترك',
+      register: register('sharedLocationLink'),
+      error: errors.sharedLocationLink?.message,
+    },
+    {
+      name: 'latitude',
+      type: 'text',
+      placeholder: 'خط العرض',
+      register: register('latitude'),
+      error: errors.latitude?.message,
+    },
+    {
+      name: 'longitude',
+      type: 'text',
+      placeholder: 'خط الطول',
+      register: register('longitude'),
+      error: errors.longitude?.message,
+    },
+    // Marketer-specific fields
+    {
+      name: 'marketerLevel',
+      type: 'select',
+      placeholder: 'مستوى المسوق',
+      register: register('marketerLevel'),
+      error: errors.marketerLevel?.message,
+      options: [
+        { value: 'JUNIOR', label: 'مبتدئ' },
+        { value: 'SENIOR', label: 'خبير' },
+        { value: 'LEAD', label: 'قائد' },
+        { value: 'MANAGER', label: 'مدير' },
+      ],
+    },
+    {
+      name: 'specialization',
+      type: 'text',
+      placeholder: 'التخصص',
+      register: register('specialization'),
+      error: errors.specialization?.message,
+    },
+    {
+      name: 'targetAudience',
+      type: 'text',
+      placeholder: 'الجمهور المستهدف',
+      register: register('targetAudience'),
+      error: errors.targetAudience?.message,
+    },
+    {
+      name: 'commissionRate',
+      type: 'number',
+      placeholder: 'نسبة العمولة (%)',
+      register: register('commissionRate', { valueAsNumber: true }),
+      error: errors.commissionRate?.message,
+    },
+    {
+      name: 'performanceRating',
+      type: 'number',
+      placeholder: 'تقييم الأداء (0-5)',
+      register: register('performanceRating', { valueAsNumber: true }),
+      error: errors.performanceRating?.message,
+    },
+    {
+      name: 'marketerStatus',
+      type: 'select',
+      placeholder: 'حالة المسوق',
+      register: register('marketerStatus'),
+      error: errors.marketerStatus?.message,
+      options: [
+        { value: 'ACTIVE', label: 'نشط' },
+        { value: 'INACTIVE', label: 'غير نشط' },
+        { value: 'SUSPENDED', label: 'معلق' },
+      ],
+    },
+  ];
+} 
